@@ -48,11 +48,17 @@ public class SampleAddress extends SampleSourceCode {
         this.cityName = cityName;
     }
     
-    
+    @Override
+    public void fillObject() {
+        streetName = "myStreetName";
+        houseNumber = "5";
+        zipCode = "00000";
+        cityName = "myCityName";
+    }
     
     
     public void invalidateAddress() {
-        System.out.println("Someone request to change the currentAddress");
+        System.out.println("Someone request to change the current address");
     }
     
 }

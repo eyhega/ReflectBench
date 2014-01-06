@@ -37,10 +37,13 @@ public class JavaLangReflect extends ReflectAPI {
     public void searchForFields(Object obj) {
         String fieldToSearch = ((SampleSourceCode)obj).getSearchingField();
         try {
-            obj.getClass().getField(fieldToSearch);
+            Field field = obj.getClass().getDeclaredField(fieldToSearch);
+            //Object value = field.get(obj);
         } catch (NoSuchFieldException ex) {
             Logger.getLogger(JavaLangReflect.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
+            Logger.getLogger(JavaLangReflect.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException ex) {
             Logger.getLogger(JavaLangReflect.class.getName()).log(Level.SEVERE, null, ex);
         }
         

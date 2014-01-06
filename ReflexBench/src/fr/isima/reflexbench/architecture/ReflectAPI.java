@@ -36,9 +36,40 @@ public abstract class ReflectAPI {
         
     }
     
+    /**
+     * List all the declared methods from obj class.
+     * 
+     * @param obj Object to process 
+     */
     public abstract void listMethods(Object obj);
+    
+    /**
+     * List all the declared fields from obj class.
+     * 
+     * @param obj Object to process.
+     */
     public abstract void listFields(Object obj);
+    
+    /**
+     * Search for a specific field in obj class, and get the value of this field.
+     * <p>This field is specified in the sample class by the tag name <i>searchingField</i></p>
+     * 
+     * @param obj Object to process.
+     */
     public abstract void searchForFields(Object obj);
+    
+    /**
+     * Search for a specific method in obj class.
+     * <p>This method name is specified in the sample class by the tag name <i>searchingMethod</i></p>
+     * 
+     * @param obj Object to process.
+     */
     public abstract void searchForMethods(Object obj);
+    
+    /**
+     * Search and invoke the specific method.
+     * 
+     * @param obj Object to process.
+     */
     public abstract void invokeMethod(Object obj);
 }

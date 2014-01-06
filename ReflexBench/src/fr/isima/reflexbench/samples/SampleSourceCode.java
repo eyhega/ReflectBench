@@ -23,5 +23,7 @@ public abstract class SampleSourceCode {
         return searchingField;
     }
     
+    public abstract void fillObject();
+    
     
 }

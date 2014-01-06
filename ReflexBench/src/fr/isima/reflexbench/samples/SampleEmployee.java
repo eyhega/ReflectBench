@@ -65,6 +65,13 @@ public class SampleEmployee extends SampleSourceCode {
         this.address = address;
     }
     
+    @Override
+    public void fillObject() {
+        name = "myName";
+        surname = "mySurname";
+        address = new SampleAddress();
+        address.fillObject();
+    }
     
     public void receiveSalary() {
         money+= FIXED_SALARY;
