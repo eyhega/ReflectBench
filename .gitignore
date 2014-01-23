@@ -42,6 +42,12 @@ local.properties
 # TeXlipse plugin
 .texlipse
 
+# Results
+*.csv
+*.png
+*.jpg
+*.jpeg
+
 
 ### Java ###
 *.class
@@ -53,3 +59,4 @@ local.properties
 *.jar
 *.war
 *.ear
+/ReflexBench/nbproject/private/
