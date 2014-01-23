@@ -21,12 +21,12 @@ import java.util.List;
 public class Benchmark {
     
     private final static int NB_REPLICATIONS = 100;
-    private List<ReflectAPI> reflectMotors;
+    private List<ReflectAPI> reflectEngines;
     
     public Benchmark() {
-        reflectMotors = new ArrayList<>();
-        reflectMotors.add(new JavaLangReflect());
-        reflectMotors.add(new ApacheReflect());
+        reflectEngines = new ArrayList<>();
+        reflectEngines.add(new JavaLangReflect());
+        reflectEngines.add(new ApacheReflect());
     }
     
     private BenchTry bench(ReflectAPI motor, BenchDifficulty difficulty,ReflectRequestType type,Object obj) {
@@ -56,10 +56,10 @@ public class Benchmark {
         
         ReflectRequestType[] types = ReflectRequestType.values();
         for(ReflectRequestType currentType : types) {
-            for(ReflectAPI motor : reflectMotors) {
+            for(ReflectAPI engine : reflectEngines) {
                 for(int i = 0 ; i < NB_REPLICATIONS ; ++i) {
                     Runtime.getRuntime().traceMethodCalls(true);
-                    result = bench(motor, BenchDifficulty.EASY, currentType, sample);
+                    result = bench(engine, BenchDifficulty.EASY, currentType, sample);
                     Runtime.getRuntime().traceMethodCalls(false);
                     benchs.add(result);
                 }
@@ -76,9 +76,8 @@ public class Benchmark {
         Benchmark benchmark = new Benchmark();
         List<BenchTry> data = benchmark.launchAllBenchmarks();
         
-        for(BenchTry b : data) {
-            System.out.println(b);
-        }
+        ExportStrategy export = new CSVExportation();
+        export.exportBenchmarksResult(data,"test.csv");
     }
     
 }
