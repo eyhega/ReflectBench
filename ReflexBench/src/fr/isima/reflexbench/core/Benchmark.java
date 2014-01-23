@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class Benchmark {
     
-    private final static int NB_REPLICATIONS = 100;
+    private final static int NB_REPLICATIONS = 1000000;
     private List<ReflectAPI> reflectEngines;
     
     public Benchmark() {
@@ -76,8 +76,8 @@ public class Benchmark {
         Benchmark benchmark = new Benchmark();
         List<BenchTry> data = benchmark.launchAllBenchmarks();
         
-        ExportStrategy export = new CSVExportation();
-        export.exportBenchmarksResult(data,"test.csv");
+        ExportStrategy export = new RPlotExportation();
+        export.exportBenchmarksResult(data, null);
     }
     
 }

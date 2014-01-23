@@ -33,7 +33,7 @@ public class CSVExportation extends ExportStrategy {
         if(file.isDirectory()) {
             DateFormat format = new SimpleDateFormat("HHmmss-dd-MM-yyyy");
             Date currentDate = new Date();
-            filePath = fileOrDirectoryPath + File.pathSeparator + DEFAULT_CSV_PREFIXNAME +format.format(currentDate) + ".csv";
+            filePath = fileOrDirectoryPath + File.separator + DEFAULT_CSV_PREFIXNAME +format.format(currentDate) + ".csv";
         }
         
         PrintWriter pw = null;
@@ -45,28 +45,12 @@ public class CSVExportation extends ExportStrategy {
         
         if(pw != null) {
             
-            Field[] headers = BenchTry.class.getDeclaredFields();
-            
             //Write headers
-            pw.print(headers[0].getName());
-            for(int i = 1 ; i < headers.length ; ++i) {
-                pw.print(";" + headers[i].getName());
-            }
-            pw.print("\n");
+            pw.println(BenchTry.getTagsToCSV(";"));
             
             //Write Data
             for(BenchTry currentTry : benchTries) {
-                try {
-                    pw.print(headers[0].get(currentTry));
-                    for(int index = 1 ; index < headers.length ; ++index) {
-                       pw.print(";" + headers[index].get(currentTry));
-                    }
-                    pw.print("\n");
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(CSVExportation.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(CSVExportation.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                pw.println(currentTry.toCSV(";"));
             }
             
             pw.flush();

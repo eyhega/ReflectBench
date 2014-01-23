@@ -17,13 +17,32 @@ public class BenchTry {
     public ReflectRequestType type;
     public double time;
     public String reflectAPIName;
-
+    
+    
+    public static String getTagsToCSV(String separator) {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("difficulty").append(separator).append("type").append(separator)
+                .append("time").append(separator).append("reflectAPIName");
+        
+        return sb.toString();
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         
         sb.append("[ API=").append(reflectAPIName).append(", Type =").append(type.toString()).append(", Difficulty=").append(difficulty.toString());
         sb.append(", time=").append(time).append("ns ]");
+        
+        return sb.toString();
+    }
+    
+    public String toCSV(String separator) {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(difficulty).append(separator).append(type).append(separator)
+                .append(time).append(separator).append(reflectAPIName);
         
         return sb.toString();
     }
