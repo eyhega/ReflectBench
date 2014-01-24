@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class Benchmark {
     
-    private final static int NB_REPLICATIONS = 1000000;
+    private final static int NB_REPLICATIONS = 10000;
     private List<ReflectAPI> reflectEngines;
     
     public Benchmark() {

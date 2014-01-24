@@ -28,12 +28,18 @@ public class CSVExportation extends ExportStrategy {
     @Override
     public Boolean exportBenchmarksResult(Collection<BenchTry> benchTries,String fileOrDirectoryPath) {
         Boolean result = false;
-        File file = new File(fileOrDirectoryPath);
-        String filePath = fileOrDirectoryPath;
-        if(file.isDirectory()) {
-            DateFormat format = new SimpleDateFormat("HHmmss-dd-MM-yyyy");
-            Date currentDate = new Date();
-            filePath = fileOrDirectoryPath + File.separator + DEFAULT_CSV_PREFIXNAME +format.format(currentDate) + ".csv";
+        File file = null;
+        if(fileOrDirectoryPath != null) {
+            file = new File(fileOrDirectoryPath);
+            String filePath = fileOrDirectoryPath;
+            if(file.isDirectory()) {
+                DateFormat format = new SimpleDateFormat("HHmmss-dd-MM-yyyy");
+                Date currentDate = new Date();
+                filePath = fileOrDirectoryPath + File.separator + DEFAULT_CSV_PREFIXNAME +format.format(currentDate) + ".csv";
+            }
+        }
+        else {
+            file = new File(DEFAULT_CSV_PREFIXNAME + ".csv");
         }
         
         PrintWriter pw = null;

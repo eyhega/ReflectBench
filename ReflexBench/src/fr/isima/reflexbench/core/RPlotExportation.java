@@ -4,6 +4,7 @@
  */
 package fr.isima.reflexbench.core;
 
+import fr.isima.reflexbench.architecture.ReflectRequestType;
 import java.io.File;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -82,10 +83,17 @@ public class RPlotExportation extends ExportStrategy {
         
         engine.eval("meanData <- aggregate(benchData$time,list(name=benchData$reflectAPIName,difficulty=benchData$difficulty,type=benchData$type),mean)");
         
+        //global chart
         engine.eval("qplot(data=benchData,x=reflectAPIName,y=time,fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip() + facet_wrap(~type)");
+        String directoryNameSanitized = (directory.getAbsolutePath()+ File.separator).replace(pattern, "\\"+File.separator);
+        engine.eval("ggsave(\""+directoryNameSanitized+"main.png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
         
-        String nameSanitized = (directory.getAbsolutePath()+ File.separator +"main.png").replace(pattern, "\\"+File.separator);
-        engine.eval("ggsave(\""+nameSanitized+"\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+        
+        //charts for each type
+        for(ReflectRequestType currentType : ReflectRequestType.values()) {
+            engine.eval("qplot(main=\""+currentType+" graph\", data=benchData[benchData$type==\""+currentType+"\",],x=reflectAPIName,y=time,ylab=\"Time in nanosecond\",fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip()");
+            engine.eval("ggsave(\""+directoryNameSanitized+currentType+".png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+        }
         
         engine.end();
         sucess = true;
