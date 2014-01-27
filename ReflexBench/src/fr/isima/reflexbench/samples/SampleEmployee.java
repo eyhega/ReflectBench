@@ -77,6 +77,4 @@ public class SampleEmployee extends SampleSourceCode {
         money+= FIXED_SALARY;
     }
     
-    
-    
 }

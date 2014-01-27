@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.rosuda.JRI.Rengine;
-import org.rosuda.REngine.JRI.JRIEngine;
-import sun.misc.Regexp;
 
 /**
  *
@@ -72,31 +70,46 @@ public class RPlotExportation extends ExportStrategy {
     }
 
     private Boolean processRPlotGeneration(String csvPathName, File directory) {
-        Boolean sucess = false;
+        Boolean sucess = true;
         
-        engine.eval("library(ggplot2)"); // load ggplot2
-        
-        String pattern = File.separator;
-        String csvPathNameSanitized = csvPathName.replace(pattern, "\\" + File.separator);
-        engine.eval("filepath <- \""+ csvPathNameSanitized + "\"");
-        engine.eval("benchData <- read.table(file=filepath,header=T,sep=\";\")");
-        
-        engine.eval("meanData <- aggregate(benchData$time,list(name=benchData$reflectAPIName,difficulty=benchData$difficulty,type=benchData$type),mean)");
-        
-        //global chart
-        engine.eval("qplot(data=benchData,x=reflectAPIName,y=time,fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip() + facet_wrap(~type)");
-        String directoryNameSanitized = (directory.getAbsolutePath()+ File.separator).replace(pattern, "\\"+File.separator);
-        engine.eval("ggsave(\""+directoryNameSanitized+"main.png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
-        
-        
-        //charts for each type
-        for(ReflectRequestType currentType : ReflectRequestType.values()) {
-            engine.eval("qplot(main=\""+currentType+" graph\", data=benchData[benchData$type==\""+currentType+"\",],x=reflectAPIName,y=time,ylab=\"Time in nanosecond\",fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip()");
-            engine.eval("ggsave(\""+directoryNameSanitized+currentType+".png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+        if(!engine.waitForR()) {
+            Logger.getGlobal().log(Level.SEVERE, "Can not get R ready");
+            sucess = false;
         }
-        
-        engine.end();
-        sucess = true;
+        if(sucess) {
+            
+            engine.eval("library(ggplot2)"); // load ggplot2
+
+            String pattern = File.separator;
+            String csvPathNameSanitized = csvPathName.replace(pattern, "\\" + File.separator);
+            engine.eval("filepath <- \""+ csvPathNameSanitized + "\"");
+            engine.eval("benchData <- read.table(file=filepath,header=T,sep=\";\")");
+
+            engine.eval("meanData <- aggregate(list(time=benchData$time),list(difficulty=benchData$difficulty,type=benchData$type,reflectAPIName=benchData$reflectAPIName),mean)");
+
+            //global chart
+            engine.eval("qplot(main=\"Time to process reflection / API.\",data=meanData,x=reflectAPIName,y=time,fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip() + facet_wrap(~type)");
+            String directoryNameSanitized = (directory.getAbsolutePath()+ File.separator).replace(pattern, "\\"+File.separator);
+            engine.eval("ggsave(\""+directoryNameSanitized+"main.png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+
+
+            //bar charts for each type
+            for(ReflectRequestType currentType : ReflectRequestType.values()) {
+                engine.eval("qplot(main=\""+currentType+" graph.\", data=meanData[meanData$type==\""+currentType+"\",],x=reflectAPIName,y=time,ylab=\"Time in nanosecond\",fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip()");
+                engine.eval("ggsave(\""+directoryNameSanitized+currentType+".png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+            }
+            
+            
+            
+            /*
+            //error bars for each type
+            for(ReflectRequestType currentType : ReflectRequestType.values()) {
+                engine.eval("qplot(main=\""+currentType+" values repartition.\", data=benchData[benchData$type==\""+currentType+"\",],x=reflectAPIName,y=time,ylab=\"Time in nanosecond\",fill=reflectAPIName)+ geom_boxplot(outlier.size=0) + coord_flip()");
+                engine.eval("ggsave(\""+directoryNameSanitized+currentType+"Errors.png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+            }*/
+            
+            engine.end();
+        }
         return sucess;
     }
     

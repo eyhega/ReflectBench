@@ -26,7 +26,9 @@ public class ApacheReflect extends ReflectAPI {
 
     @Override
     public void listMethods(Object obj) {
-        
+        //doesn't exist into apache reflect engine
+        //same as java.lang
+        final Method[] methods = obj.getClass().getDeclaredMethods();
     }
 
     @Override
