@@ -40,7 +40,7 @@ public class Benchmark {
         
         
         beginTime = System.nanoTime();
-        motor.process(type, obj);
+        benchData.memoryUsage = motor.process(type, obj);
         endTime = System.nanoTime();
         
         benchData.time = endTime - beginTime;

@@ -23,8 +23,8 @@ public abstract class ReflectAPI {
     }
     
     
-    public void process(ReflectRequestType type, Object obj) {
-        
+    public Long process(ReflectRequestType type, Object obj) {
+        Long beginMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         switch(type)
         {
             case LIST_ALL_METHODS   : listMethods(obj);        break;
@@ -33,7 +33,8 @@ public abstract class ReflectAPI {
             case SEARCH_FOR_METHOD  : searchForMethods(obj);   break;
             case INVOKE_METHOD      : invokeMethod(obj);       break;
         }
-        
+        Long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        return endMemory - beginMemory;
     }
     
     /**

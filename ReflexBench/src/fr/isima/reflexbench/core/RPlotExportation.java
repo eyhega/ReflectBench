@@ -85,7 +85,7 @@ public class RPlotExportation extends ExportStrategy {
             engine.eval("filepath <- \""+ csvPathNameSanitized + "\"");
             engine.eval("benchData <- read.table(file=filepath,header=T,sep=\";\")");
 
-            engine.eval("meanData <- aggregate(list(time=benchData$time),list(difficulty=benchData$difficulty,type=benchData$type,reflectAPIName=benchData$reflectAPIName),mean)");
+            engine.eval("meanData <- aggregate(list(time=benchData$time),list(difficulty=benchData$difficulty,type=benchData$type,reflectAPIName=benchData$reflectAPIName,memoryUsage=benchData$memoryUsage),mean)");
 
             //global chart
             engine.eval("qplot(main=\"Time to process reflection / API.\",data=meanData,x=reflectAPIName,y=time,fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip() + facet_wrap(~type)");
@@ -99,7 +99,11 @@ public class RPlotExportation extends ExportStrategy {
                 engine.eval("ggsave(\""+directoryNameSanitized+currentType+".png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
             }
             
-            
+            //eval memory usage
+            for(ReflectRequestType currentType : ReflectRequestType.values()) {
+                engine.eval("qplot(main=\""+currentType+" graph memory usage.\", data=meanData[meanData$type==\""+currentType+"\",],x=reflectAPIName,y=memoryUsage,ylab=\"Memory usage in byte\",fill=reflectAPIName) + geom_bar(stat=\"identity\",width=.5, position=\"dodge\") + coord_flip()");
+                engine.eval("ggsave(\""+directoryNameSanitized+currentType+"Memory.png\",width="+DEFAULT_IMG_WIDTH+",height="+DEFAULT_IMG_HEIGHT+")");
+            }
             
             /*
             //error bars for each type

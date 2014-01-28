@@ -17,13 +17,14 @@ public class BenchTry {
     public ReflectRequestType type;
     public double time;
     public String reflectAPIName;
+    public Long memoryUsage;
+    
     
     
     public static String getTagsToCSV(String separator) {
         StringBuilder sb = new StringBuilder();
-        
         sb.append("difficulty").append(separator).append("type").append(separator)
-                .append("time").append(separator).append("reflectAPIName");
+                .append("time").append(separator).append("reflectAPIName").append(separator).append("memoryUsage");
         
         return sb.toString();
     }
@@ -33,7 +34,7 @@ public class BenchTry {
         StringBuilder sb = new StringBuilder();
         
         sb.append("[ API=").append(reflectAPIName).append(", Type =").append(type.toString()).append(", Difficulty=").append(difficulty.toString());
-        sb.append(", time=").append(time).append("ns ]");
+        sb.append(", time=").append(time).append("ns, Memory usage=").append(memoryUsage).append(" ]");
         
         return sb.toString();
     }
@@ -42,7 +43,8 @@ public class BenchTry {
         StringBuilder sb = new StringBuilder();
         
         sb.append(difficulty).append(separator).append(type).append(separator)
-                .append(time).append(separator).append(reflectAPIName);
+                .append(time).append(separator).append(reflectAPIName)
+                .append(separator).append(memoryUsage);
         
         return sb.toString();
     }
